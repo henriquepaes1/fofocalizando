@@ -16,6 +16,7 @@ void system_main(void) {
  */
 void user1_main(void) {
    int i;
+   printf("to na task 1");
    for(;;) {
       for(i=0; i<100; i++) {
          asm volatile ("nop");
@@ -29,6 +30,7 @@ void user1_main(void) {
  */
 void user2_main(void) {
    int i;
+   printf("to na task 2");
    for(;;) {
       for(i=0; i<150; i++) {
          asm volatile ("nop");

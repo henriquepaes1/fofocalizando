@@ -171,6 +171,4 @@ void sched_init(void) {
    tid = 0;
    tcb = &tcb_list[0];
    slice = TIMESLICE;
-
-   IRQ_REG(enable_basic) = __bit(0);   // habilita interrupção básica 0 (timer)
 }
