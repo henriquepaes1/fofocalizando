@@ -172,14 +172,5 @@ void sched_init(void) {
    tcb = &tcb_list[0];
    slice = TIMESLICE;
 
-   /*
-    * Configura interrupção do timer.
-    */
-   TIMER_REG(load) = 10000;            // 1MHz / 10000 = 100 Hz
-   TIMER_REG(control) = __bit(9)       // habilita free-running counter
-                      | __bit(7)       // habilita timer
-                      | __bit(5)       // habilita interrupção
-                      | __bit(1);      // timer de 23 bits
-
    IRQ_REG(enable_basic) = __bit(0);   // habilita interrupção básica 0 (timer)
 }

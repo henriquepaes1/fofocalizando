@@ -3,8 +3,6 @@
 #include "bcm.h"
 #include "sched.h"
 
-extern void enable_irq(int);
-
 /*
  * Ponto de entrada do sistema.
  */
@@ -21,7 +19,7 @@ void user1_main(void) {
    for(;;) {
       for(i=0; i<100; i++) {
          asm volatile ("nop");
-//         yield();
+         yield();
       }
    }
 }
@@ -34,7 +32,7 @@ void user2_main(void) {
    for(;;) {
       for(i=0; i<150; i++) {
          asm volatile ("nop");
-//         yield();
+         yield();
       }
    }
 }
