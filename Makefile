@@ -22,7 +22,7 @@ OPTS = -march=armv7-a -mtune=cortex-a7 -g -O1
 OBJ = $(FONTES:.s=.o)
 OBJETOS = $(OBJ:.c=.o)
 
-LDOPTS = -lgcc -L/usr/lib/gcc/arm-none-eabi/8.3.1/
+# LDOPTS = -lgcc -L/usr/lib/gcc/arm-none-eabi/8.3.1/
 
 all: ${EXEC} ${LIST} ${IMAGE} ${HEXFL}
 
@@ -69,16 +69,20 @@ ${HEXFL}: ${EXEC}
 #
 clean:
 	rm -f *.o ${EXEC} ${MAP} ${LIST} ${IMAGE}
-	-killall gdb-multiarch openocd
+	-pkill qemu
+	-pkill gdb
 
-#
-# Depuração com openocd e gdb
-#
-debug: ${EXEC}
-	if ! pgrep openocd >/dev/null ; then \
-		openocd -f rpi2.cfg & \
+qemu: ${EXEC}
+	@if lsof -Pi :1234 >/dev/null ; then \
+			echo "qemu ja esta executando"; \
+	else qemu-system-arm -s -M virt -kernel ${EXEC} & \
 	fi
-	gdb-multiarch -ex "target extended-remote:3333" \
-		           -ex "load" \
-					  ${EXEC}
 
+#
+# Depuração com gdb e qemu
+#
+debug: qemu
+	gdb-multiarch -ex "set architecture arm" \
+			-ex "target extended-remote :1234" \
+			-ex "load" \
+			${EXEC}
