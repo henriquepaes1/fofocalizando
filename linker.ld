@@ -1,6 +1,5 @@
-
 SECTIONS {
-  .text 0x8000 : {
+  .text 0x40000000 : {
     boot.o(.text)
     *(.text)
   }
