@@ -50,13 +50,13 @@ typedef struct {
    uint32_t gppud;       // Pull-up/down enable
    uint32_t gppudclk[2]; // Pull-up/down clock enable
 } gpio_reg_t;
-#define GPIO_REG(X)  ((volatile gpio_reg_t*)(GPIO_ADDR))->X
+#define GPIO_REG(X)  ((gpio_reg_t*)(GPIO_ADDR))->X
 
 typedef struct {
    uint32_t irq;
    uint32_t enables;
 } aux_reg_t;
-#define AUX_REG(X)   ((volatile aux_reg_t*)(AUX_ADDR))->X
+#define AUX_REG(X)   ((aux_reg_t*)(AUX_ADDR))->X
 
 typedef struct {
    uint32_t io;
@@ -71,7 +71,7 @@ typedef struct {
    uint32_t stat;
    uint32_t baud;
 } mu_reg_t;
-#define MU_REG(X)    ((volatile mu_reg_t*)(AUX_MU_ADDR))->X
+#define MU_REG(X)    ((mu_reg_t*)(AUX_MU_ADDR))->X
 
 typedef struct {
    uint32_t load;
@@ -84,7 +84,7 @@ typedef struct {
    uint32_t pre;
    uint32_t counter;
 } timer_reg_t;
-#define TIMER_REG(X)   ((volatile timer_reg_t*)(TIMER_ADDR))->X
+#define TIMER_REG(X)   ((timer_reg_t*)(TIMER_ADDR))->X
 
 typedef struct {
    uint32_t pending_basic;
@@ -98,7 +98,7 @@ typedef struct {
    uint32_t disable_2;
    uint32_t disable_basic;
 } irq_reg_t;
-#define IRQ_REG(X)     ((volatile irq_reg_t*)(IRQ_ADDR))->X
+#define IRQ_REG(X)     ((irq_reg_t*)(IRQ_ADDR))->X
 
 typedef struct {
    uint32_t control;
@@ -130,7 +130,7 @@ typedef struct {
    uint32_t core2_mailbox_read[4];
    uint32_t core3_mailbox_read[4];
 } core_reg_t;
-#define CORE_REG(X)     ((volatile core_reg_t*)(CORE_ADDR))->X
+#define CORE_REG(X)     ((core_reg_t*)(CORE_ADDR))->X
 
 typedef struct {
    uint32_t read;
@@ -143,6 +143,6 @@ typedef struct {
    uint32_t config;
    uint32_t write;
 } gpumail_reg_t;
-#define GPUMAIL_REG(X)     ((volatile gpumail_reg_t*)(GPU_MAILBOX_ADDR))->X
+#define GPUMAIL_REG(X)     ((gpumail_reg_t*)(GPU_MAILBOX_ADDR))->X
 
 #endif

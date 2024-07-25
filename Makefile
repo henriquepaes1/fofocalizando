@@ -1,5 +1,5 @@
 
-FONTES = boot.s sched.c main.c stub.c
+FONTES = boot.s sched.c main.c stub.c uart.c gpio.c
 LDSCRIPT = linker.ld
 PROJETO = tasks
 
@@ -22,7 +22,7 @@ OPTS = -march=armv7-a -mtune=cortex-a7 -g -O1
 OBJ = $(FONTES:.s=.o)
 OBJETOS = $(OBJ:.c=.o)
 
-LDOPTS = -lc -L/usr/lib/arm-none-eabi/newlib -lgcc -L/usr/lib/gcc/arm-none-eabi/9.2.1/
+LDOPTS = -lc -L/usr/lib/arm-none-eabi/newlib -lgcc -L/usr/lib/gcc/arm-none-eabi/10.3.1/
 
 all: ${EXEC} ${LIST} ${IMAGE} ${HEXFL}
 
