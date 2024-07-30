@@ -8,10 +8,13 @@
 #include <string>
 #include <stdbool.h>
 #include <iostream>
+#include <fstream>
+#include <sstream>
 
 using namespace std;
 
 #define QUEUE_SIZE 10
+#define FILENAME "file"
 
 typedef struct {
   int id;
@@ -62,16 +65,15 @@ bool dequeue(MessageQueue *queue, Message *message) {
 }
 
 int consumidor(MessageQueue *queue, int consumerIndex) {
-    while (1) {
-        Message *message;
-        if (!queue_empty(queue) && queue->messages[queue->head].id == consumerIndex) {
-            dequeue(queue, message);
-            cout << "Consumidor ";
-            cout << consumerIndex;
-            cout << " recebeu a mensagem:\n";
-            cout << (*message).msg;
-            cout << "\n"; 
-        }
+    stringstream filename;
+    filename  << FILENAME;
+    ofstream outfile(filename.str(), ios::app);
+    Message *message;
+    if (!queue_empty(queue) && queue->messages[queue->head].id == consumerIndex) {
+        dequeue(queue, message);
+        outfile << "Consumidor " << consumerIndex << " recebeu a mensagem:\n";
+        outfile << (*message).msg << "\n";
+        outfile.flush();
     }
 }
 
@@ -87,13 +89,11 @@ int main(int argc, char **argv) {
     queue_init(queue);
 
     // criar fila compartilhada
-    pid_t pid = -1;
     for (int i = 0; i < n; i++) {
-        // Processo Pai
-        if (pid != 0) {
-            pid = fork();
-            // Processo Filho - Consumidor
-            if (pid == 0) {
+        pid_t pid = fork();
+        // Processo Filho - Consumidor
+        if (pid == 0) {
+            while (1) {
                 consumidor(queue, i);
             }
         }
@@ -102,12 +102,14 @@ int main(int argc, char **argv) {
     // produtor
     while (1) {
         int id;
+        cout << "id: ";
         cin >> id;
+        cout << "mensagem: ";
         string msg;
         cin >> msg;
-        Message *msgStruct;
-        (*msgStruct).id = id;
-        (*msgStruct).msg = msg;
-        enqueue(queue, *msgStruct);
+        Message msgStruct;
+        msgStruct.id = id;
+        msgStruct.msg = msg;
+        enqueue(queue, msgStruct);
     }
 }
