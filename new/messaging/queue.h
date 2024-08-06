@@ -2,11 +2,10 @@
 
 #define QUEUE_SIZE 10
 
-using namespace std;
 
 typedef struct {
   int id;
-  string msg;
+  std::string msg;
 } Message;
 
 typedef struct {
