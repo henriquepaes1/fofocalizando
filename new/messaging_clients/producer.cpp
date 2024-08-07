@@ -3,18 +3,31 @@
 #include "../messaging/queue.h"
 #include <sys/socket.h>
 #include <netinet/in.h>
-#include <cstring> 
+#include <cstring>
 
 int main(int argc, char **argv) {
     int publisherSocket = socket(AF_INET, SOCK_STREAM, 0);
+
+    if (publisherSocket < 0) {
+        perror("socket");
+        exit(EXIT_FAILURE);
+    }
+
     sockaddr_in messageQueueAddr;
     messageQueueAddr.sin_family = AF_INET;
-    messageQueueAddr.sin_port = htons(8879);
+    messageQueueAddr.sin_port = htons(8889);
     messageQueueAddr.sin_addr.s_addr = INADDR_ANY;
 
-    connect(publisherSocket, (struct sockaddr*)&messageQueueAddr, sizeof(messageQueueAddr));
+    std::cout << "Tentando conectar à fila...\n";
 
-    while (1) {
+    if (connect(publisherSocket, (struct sockaddr*)&messageQueueAddr, sizeof(messageQueueAddr)) < 0) {
+        perror("connect");
+        exit(EXIT_FAILURE);
+    }
+
+    std::cout << "Conectado à fila...\n";
+
+    while (true) {
         int id;
         std::cout << "id: ";
         std::cin >> id;
@@ -24,6 +37,10 @@ int main(int argc, char **argv) {
         Message msgStruct;
         msgStruct.id = id;
         msgStruct.msg = msg;
-        send(publisherSocket, msgStruct.msg.c_str(), strlen(msgStruct.msg.c_str()), 0);
+
+        std::string message = std::to_string(msgStruct.id) + msgStruct.msg;
+
+        send(publisherSocket, message.c_str(), message.size(), 0);
+
     }
 }

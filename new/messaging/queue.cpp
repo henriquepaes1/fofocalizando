@@ -1,4 +1,4 @@
-#include <queue.h>
+#include "queue.h"
 
 void queue_init(MessageQueue *queue) {
   queue->head = 0;
@@ -22,5 +22,16 @@ bool enqueue(MessageQueue *queue, Message message) {
   queue->messages[queue->tail] = message;
   queue->tail = (queue->tail + 1) % QUEUE_SIZE;
   queue->count++;
+  return true;
+}
+
+bool dequeue(MessageQueue *queue, Message *message) {
+  if (queue_empty(queue)) {
+    return false;
+  }
+
+  *message = queue->messages[queue->head];
+  queue->head = (queue->head + 1) % QUEUE_SIZE;
+  queue->count--;
   return true;
 }
