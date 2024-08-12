@@ -5,7 +5,7 @@
 
 typedef struct {
   int id;
-  std::string msg;
+  char msg[256];
 } Message;
 
 typedef struct {

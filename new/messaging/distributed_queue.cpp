@@ -74,11 +74,10 @@ int main(int argc, char **argv) {
         int bytesReceived = recv(producerSocket, buffer, sizeof(buffer), 0);
         if (bytesReceived > 0) {
             Message msgStruct;
-            msgStruct.id = buffer[0] - '0';
-            msgStruct.msg = std::string(buffer + 1, bytesReceived - 1);
-            if (enqueue(queue, msgStruct)) {
-                std::cout << "Colocou mensagem na fila para: " << msgStruct.id << ".\n";
-            }
+            memcpy(&msgStruct.id, buffer, sizeof(int));
+            memcpy(msgStruct.msg, buffer + sizeof(int), sizeof(msgStruct.msg));
+
+            enqueue(queue, msgStruct);
         }
     }
 
@@ -87,18 +86,21 @@ int main(int argc, char **argv) {
 
 void consumirMensagem(MessageQueue *queue, int consumerIndex) {
     std::stringstream filename;
-    filename  << "msgs";
+    filename << "msgs" << consumerIndex << ".txt";
     std::ofstream outfile(filename.str(), std::ios::app);
 
-    Message *message;
+    Message messageObj;
+    Message *message = &messageObj;
     if (!queue_empty(queue) && queue->messages[queue->head].id == consumerIndex) {
-        std::cout << "Tem mensagem para" << consumerIndex << ".\n";
-        if(dequeue(queue, message)){
-            std::cout << "Consumiu a mensagem certa " << message->msg << ".\n";
+        std::cout << "Deu match.\n";
+
+        Message messageObj;
+        Message *message = &messageObj;
+
+        if (dequeue(queue, message)) {
             outfile << "Consumidor " << consumerIndex << " recebeu a mensagem:\n";
-            outfile << (*message).msg << "\n";
+            outfile << message->msg << "\n";
             outfile.flush();
         }
-        
     }
 }

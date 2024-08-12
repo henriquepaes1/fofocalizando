@@ -34,13 +34,17 @@ int main(int argc, char **argv) {
         std::cout << "mensagem: ";
         std::string msg;
         std::cin >> msg;
+        
         Message msgStruct;
         msgStruct.id = id;
-        msgStruct.msg = msg;
+        strncpy(msgStruct.msg, msg.c_str(), sizeof(msgStruct.msg) - 1);
+        msgStruct.msg[sizeof(msgStruct.msg) - 1] = '\0';
 
-        std::string message = std::to_string(msgStruct.id) + msgStruct.msg;
+        char buffer[sizeof(int) + sizeof(msgStruct.msg)];
+        memcpy(buffer, &msgStruct.id, sizeof(int));
+        memcpy(buffer + sizeof(int), msgStruct.msg, sizeof(msgStruct.msg));
 
-        send(publisherSocket, message.c_str(), message.size(), 0);
+        send(publisherSocket, buffer, sizeof(buffer), 0);
 
     }
 }
